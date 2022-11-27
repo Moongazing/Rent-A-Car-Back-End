@@ -9,7 +9,7 @@ namespace TAO_DataAccess.Abstract
 {
   public interface IRentalDal:IEntityRepository<Rental>
   {
-    //List<RentalDetailDto> GetCarDetails();
+    List<RentalDetailDto> GetRentalDetails();
 
   }
 }

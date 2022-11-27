@@ -12,7 +12,7 @@ namespace TAO_Business.ValidationRules.FluentValidation
     {
       #region NotEmptyRules
       RuleFor(r => r.CarId).NotEmpty();
-      RuleFor(r=> r.CustomerId).NotEmpty();
+     // RuleFor(r=> r.CustomerId).NotEmpty();
       RuleFor(r=>r.RentDate).NotEmpty();
       #endregion
 

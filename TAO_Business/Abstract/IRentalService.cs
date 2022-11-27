@@ -12,7 +12,7 @@ namespace TAO_Business.Abstract
   {
     IDataResult<List<Rental>> GetAll();
     IDataResult<List<Rental>> AvailableDate(DateTime min, DateTime max);
-    //IDataResult<List<CarDetailDto>> GetCarDetails();
+    IDataResult<List<RentalDetailDto>> GetRentalDetails();
     IDataResult<Rental> GetById(int rentalId);
     IResult Add(Rental rental);
     IResult Delete(Rental rental);

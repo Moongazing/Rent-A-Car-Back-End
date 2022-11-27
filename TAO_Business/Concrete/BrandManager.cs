@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using TAO_Business.Abstract;
+using TAO_Business.BussinesAspects.Autofac;
 using TAO_Business.Constants;
 using TAO_Business.ValidationRules.FluentValidation;
+using TAO_Core.Aspects.Autofac.Caching;
 using TAO_Core.Aspects.Autofac.Validation;
 using TAO_Core.Utilities.Business;
 using TAO_Core.Utilities.Results;
@@ -23,7 +25,10 @@ namespace TAO_Business.Concrete
       _brandDal = brandDal;
     }
 
+    [SecuredOperation("admin,brand.add")]
     [ValidationAspect(typeof(BrandValidator))]
+    [CacheRemoveAspect("IBrandService.Get")]
+
     public IResult Add(Brand brand)
     {
       var result = BusinessRules.Run(CheckIfBrandNameExists(brand.Name));
@@ -35,29 +40,33 @@ namespace TAO_Business.Concrete
       return new SuccessResult(Messages.BrandAdded);
     }
 
+    [SecuredOperation("admin,brand.delete")]
     public IResult Delete(Brand brand)
     {
       _brandDal.Delete(brand);
       return new SuccessResult(Messages.BrandDeleted);
     }
 
+    [SecuredOperation("admin,brand.list")]
     public IDataResult<List<Brand>> GetAll()
     {
       return new SuccessDataResult<List<Brand>>(_brandDal.GetAll());
     }
-
+    [SecuredOperation("admin,brand.getbyid")]
     public IDataResult<Brand> GetById(int brandId)
     {
       return new SuccessDataResult<Brand>( _brandDal.Get(b => b.Id == brandId));
     }
 
-
+    [SecuredOperation("admin,brand.update")]
     [ValidationAspect(typeof(BrandValidator))]
     public IResult Update(Brand brand)
     {
       _brandDal.Update(brand);
       return new SuccessResult(Messages.BrandUpdated);
     }
+
+
     #region Rules
     private IResult CheckIfBrandNameExists(string brandName)
     {
