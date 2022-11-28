@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using TAO_Business.Abstract;
+using TAO_Business.BussinesAspects.Autofac;
 using TAO_Business.Constants;
 using TAO_Business.ValidationRules.FluentValidation;
+using TAO_Core.Aspects.Autofac.Performance;
 using TAO_Core.Aspects.Autofac.Validation;
 using TAO_Core.Utilities.Business;
 using TAO_Core.Utilities.Results;
@@ -23,7 +25,8 @@ namespace TAO_Business.Concrete
     {
       _colorDal = colorDal;
     }
-
+    [SecuredOperation("admin,colour.add")]
+    [PerformanceAspect(5)]
     [ValidationAspect(typeof(ColourValidator))]
     public IResult Add(Colour colour)
     {
@@ -36,23 +39,27 @@ namespace TAO_Business.Concrete
       _colorDal.Add(colour);
       return new SuccessResult(Messages.ColorAdded);
     }
-
+    [SecuredOperation("admin,colour.delete")]
+    [PerformanceAspect(5)]
     public IResult Delete(Colour colour)
     {
       _colorDal.Delete(colour);
       return new SuccessResult(Messages.ColorDeleted);
     }
-
+    [SecuredOperation("admin,colour.get")]
+    [PerformanceAspect(5)]
     public  IDataResult< List<Colour>> GetAll()
     {
       return new SuccessDataResult<List<Colour>>(_colorDal.GetAll());
     }
-
+    [SecuredOperation("admin,colour.get")]
+    [PerformanceAspect(5)]
     public IDataResult<Colour> GetColor(int colorId)
     {
       return new SuccessDataResult<Colour>(_colorDal.Get(c => c.Id == colorId));
     }
-
+    [SecuredOperation("admin,colour.update")]
+    [PerformanceAspect(5)]
     [ValidationAspect(typeof(ColourValidator))]
     public IResult Update(Colour colour)
     {

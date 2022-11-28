@@ -32,7 +32,7 @@ namespace TAO_Business.Concrete
       _carDal = carDal;
       _rentalService = rentalService;
     }
-
+    [PerformanceAspect(5)]
     [SecuredOperation("car.add,admin")]
     [ValidationAspect(typeof(CarValidator))]
     [CacheRemoveAspect("ICarService.Get")]
@@ -43,6 +43,8 @@ namespace TAO_Business.Concrete
       return new SuccessResult(Messages.CarAdded);
     }
 
+    [PerformanceAspect(5)]
+    [SecuredOperation("car.list,admin")]
     [CacheAspect]
     public IDataResult<List<Car>> GetByDailyPrice(decimal min, decimal max)
     {
@@ -52,7 +54,7 @@ namespace TAO_Business.Concrete
       }
       return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.DailyPrice >= min && c.DailyPrice <= max));
     }
-
+    [PerformanceAspect(5)]
     [SecuredOperation("admin")]
     public IResult Delete(Car car)
     {
@@ -60,12 +62,16 @@ namespace TAO_Business.Concrete
       return new SuccessResult(Messages.CarDeleted);
     }
 
+    [PerformanceAspect(5)]
+    [SecuredOperation("admin,car.list")]
     [CacheAspect]
     public IDataResult<List<Car>> GetAll()
     {
       return new DataResult<List<Car>>(_carDal.GetAll(), true, Messages.CarsListed);
     }
 
+    [PerformanceAspect(5)]
+    [SecuredOperation("admin,car.list")]
     [CacheAspect]
     public IDataResult<List<Car>> GetByBrandId(int brandId)
     {
@@ -92,6 +98,8 @@ namespace TAO_Business.Concrete
       return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
     }
 
+    [PerformanceAspect(5)]
+    [SecuredOperation("admin,car.get")]
     public IDataResult<Car> GetById(int carId)
     {
       return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == carId));

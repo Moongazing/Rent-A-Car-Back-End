@@ -4,6 +4,7 @@ using System.Text;
 using TAO_Business.Abstract;
 using TAO_Business.BussinesAspects.Autofac;
 using TAO_Business.Constants;
+using TAO_Core.Aspects.Autofac.Performance;
 using TAO_Core.Utilities.Results;
 using TAO_Core.Utilities.Results.Abstract;
 using TAO_Core.Utilities.Results.Concrete;
@@ -17,28 +18,33 @@ namespace TAO_Business.Concrete
   public class AmountManager : IAmountService
   {
     IAmountDal _amountDal;
+    
     public AmountManager(IAmountDal amountDal)
     {
       _amountDal = amountDal;
     }
     [SecuredOperation("admin,amount.add")]
     public IResult Add(Amount amount)
-    {
-      _amountDal.Delete(amount);
+    {  
+      
+      _amountDal.Add(amount);
       return new SuccessResult(Messages.AmountDeleted);
     }
     [SecuredOperation("admin,amount.delete")]
     public IResult Delete(Amount amount)
     {
-      _amountDal.Add(amount);
+      _amountDal.Delete(amount);
       return new SuccessResult(Messages.AmountAdded);
     }
 
+    [PerformanceAspect(10)]
     [SecuredOperation("admin,amount.detail")]
     public IDataResult<List<AmountDetailDto>> GetAmountDetail()
     {
       return new SuccessDataResult<List<AmountDetailDto>>(_amountDal.GetAmountDetails());
     }
+
+    [PerformanceAspect(10)]
     [SecuredOperation("admin,amount.add")]
     public IResult Update(Amount amount)
     {

@@ -7,6 +7,7 @@ using TAO_Business.BussinesAspects.Autofac;
 using TAO_Business.Constants;
 using TAO_Business.ValidationRules.FluentValidation;
 using TAO_Core.Aspects.Autofac.Caching;
+using TAO_Core.Aspects.Autofac.Performance;
 using TAO_Core.Aspects.Autofac.Validation;
 using TAO_Core.Utilities.Business;
 using TAO_Core.Utilities.Results;
@@ -27,7 +28,7 @@ namespace TAO_Business.Concrete
       _rentalDal = rentalDal;
     }
 
-
+    [PerformanceAspect(5)]
     [SecuredOperation("rental.add,admin")]
     [ValidationAspect(typeof(RentalValidator))]
     public IResult Add(Rental rental)
@@ -41,7 +42,7 @@ namespace TAO_Business.Concrete
       return new SuccessResult(Messages.RentalAdded);
     }
 
-
+    [PerformanceAspect(5)]
     [CacheAspect]
     [SecuredOperation("admin,rental.availablelist")]
     public IDataResult<List<Rental>> AvailableDate(DateTime min, DateTime max)
@@ -49,6 +50,7 @@ namespace TAO_Business.Concrete
       return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r => r.RentDate >= min && r.RentDate <= max));
     }
 
+    [PerformanceAspect(5)]
     [SecuredOperation("admin,rental.delete")]
     public IResult Delete(Rental rental)
     {
@@ -56,13 +58,14 @@ namespace TAO_Business.Concrete
       return new SuccessResult(Messages.RentalDeleted);
     }
 
+    [PerformanceAspect(5)]
     [CacheAspect]
     [SecuredOperation("admin,rental.list")]
     public IDataResult<List<Rental>> GetAll()
     {
       return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
     }
-
+    [PerformanceAspect(5)]
     [CacheAspect]
     [SecuredOperation("admin,rental.getbyid")]
     public IDataResult<Rental> GetById(int rentalId)
@@ -70,7 +73,7 @@ namespace TAO_Business.Concrete
       return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == rentalId));
     }
 
-
+    [PerformanceAspect(7)]
     [CacheAspect]
     [SecuredOperation("admin,rental.detail")]
     public IDataResult<List<RentalDetailDto>> GetRentalDetails()
@@ -78,7 +81,7 @@ namespace TAO_Business.Concrete
       return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
 
     }
-
+    [PerformanceAspect(5)]
     [SecuredOperation("admin,rental.update")]
     [ValidationAspect(typeof(RentalValidator))]
     public IResult Update(Rental rental)
