@@ -53,5 +53,8 @@ namespace TAO_Business.Constants
     internal static string SuccessfulLogin;
     internal static string AccessTokenCreated;
     internal static string UserAlreadyExists;
+    internal static string AmountDeleted;
+    internal static string AmountUpdated;
+    internal static string AmountAdded;
   }
 }
