@@ -10,7 +10,8 @@ using TAO_Core.Utilities.Results;
 using TAO_Core.Utilities.Security.Hashing;
 using TAO_Core.Utilities.Security.JWT;
 using TAO_Entities.DTOs;
-
+using TAO_Core.Aspects.Autofac.Logging;
+using TAO_Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 
 namespace TAO_Business.Concrete
 {
@@ -25,6 +26,7 @@ namespace TAO_Business.Concrete
       _tokenHelper = tokenHelper;
     }
 
+    [LogAspect(typeof(FileLogger))]
     public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
     {
       byte[] passwordHash, passwordSalt;
@@ -41,7 +43,7 @@ namespace TAO_Business.Concrete
       _userService.Add(user);
       return new SuccessDataResult<User>(user, Messages.UserRegistered);
     }
-
+    [LogAspect(typeof(FileLogger))]
     public IDataResult<User> Login(UserForLoginDto userForLoginDto)
     {
       var userToCheck = _userService.GetByMail(userForLoginDto.Email);
@@ -58,7 +60,7 @@ namespace TAO_Business.Concrete
 
       return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
     }
-
+    [LogAspect(typeof(FileLogger))]
     public IResult UserExists(string email)
     {
       if (_userService.GetByMail(email) != null)
@@ -67,7 +69,7 @@ namespace TAO_Business.Concrete
       }
       return new SuccessResult();
     }
-
+    [LogAspect(typeof(FileLogger))]
     public IDataResult<AccessToken> CreateAccessToken(User user)
     {
       var claims = _userService.GetClaims(user);

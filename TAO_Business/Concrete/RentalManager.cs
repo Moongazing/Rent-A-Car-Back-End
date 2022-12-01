@@ -7,8 +7,10 @@ using TAO_Business.BussinesAspects.Autofac;
 using TAO_Business.Constants;
 using TAO_Business.ValidationRules.FluentValidation;
 using TAO_Core.Aspects.Autofac.Caching;
+using TAO_Core.Aspects.Autofac.Logging;
 using TAO_Core.Aspects.Autofac.Performance;
 using TAO_Core.Aspects.Autofac.Validation;
+using TAO_Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using TAO_Core.Utilities.Business;
 using TAO_Core.Utilities.Results;
 using TAO_Core.Utilities.Results.Abstract;
@@ -27,7 +29,7 @@ namespace TAO_Business.Concrete
     {
       _rentalDal = rentalDal;
     }
-
+    [LogAspect(typeof(FileLogger))]
     [PerformanceAspect(5)]
     [SecuredOperation("rental.add,admin")]
     [ValidationAspect(typeof(RentalValidator))]
@@ -41,7 +43,7 @@ namespace TAO_Business.Concrete
       _rentalDal.Add(rental);
       return new SuccessResult(Messages.RentalAdded);
     }
-
+    [LogAspect(typeof(FileLogger))]
     [PerformanceAspect(5)]
     [CacheAspect]
     [SecuredOperation("admin,rental.availablelist")]
@@ -49,7 +51,7 @@ namespace TAO_Business.Concrete
     {
       return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r => r.RentDate >= min && r.RentDate <= max));
     }
-
+    [LogAspect(typeof(FileLogger))]
     [PerformanceAspect(5)]
     [SecuredOperation("admin,rental.delete")]
     public IResult Delete(Rental rental)
@@ -57,7 +59,7 @@ namespace TAO_Business.Concrete
       _rentalDal.Delete(rental);
       return new SuccessResult(Messages.RentalDeleted);
     }
-
+    [LogAspect(typeof(FileLogger))]
     [PerformanceAspect(5)]
     [CacheAspect]
     [SecuredOperation("admin,rental.list")]
@@ -65,6 +67,7 @@ namespace TAO_Business.Concrete
     {
       return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
     }
+    [LogAspect(typeof(FileLogger))]
     [PerformanceAspect(5)]
     [CacheAspect]
     [SecuredOperation("admin,rental.getbyid")]
@@ -72,7 +75,7 @@ namespace TAO_Business.Concrete
     {
       return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == rentalId));
     }
-
+    [LogAspect(typeof(FileLogger))]
     [PerformanceAspect(7)]
     [CacheAspect]
     [SecuredOperation("admin,rental.detail")]
